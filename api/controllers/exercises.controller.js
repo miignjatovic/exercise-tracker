@@ -1,4 +1,3 @@
-import { Router } from 'express'
 import { Database } from 'sqlite-async'
 
 const isValidDate = (date) => {
@@ -9,7 +8,7 @@ const isValidDate = (date) => {
     return parsedDate.toISOString().slice(0, 10) === date
 }
 
-const createExercise = async (req, res) => {
+export const createExerciseController = async (req, res) => {
     const userId = req.params.id
 
     // check if the user exists
@@ -55,12 +54,3 @@ const createExercise = async (req, res) => {
         res.status(500).json({ error: 'Database error' })
     }
 }
-
-
-const router = Router()
-
-router
-    .route('/users/:id/exercises')
-    .post(createExercise)
-
-export default router

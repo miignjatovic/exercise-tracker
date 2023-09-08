@@ -1,7 +1,6 @@
-import { Router } from 'express'
 import { Database } from 'sqlite-async'
 
-const getUserExerciseLogs = async (req, res) => {
+export const getUserExerciseLogsController = async (req, res) => {
     // get params and query params
     const userId = req.params.id
     const { from, to, limit } = req.query
@@ -48,11 +47,3 @@ const getUserExerciseLogs = async (req, res) => {
         res.status(500).json({ error: 'Database error while getting logs.' })
     }
 }
-
-const router = Router({ mergeParams: true })
-
-router
-    .route('/users/:id/logs')
-    .get(getUserExerciseLogs)
-
-export default router

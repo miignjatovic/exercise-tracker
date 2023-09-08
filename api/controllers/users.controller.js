@@ -1,7 +1,6 @@
-import { Router } from 'express'
 import { Database } from 'sqlite-async'
 
-const createUser = async (req, res) => {
+export const createUserController = async (req, res) => {
     const { username } = req.body
 
     // check if username exists
@@ -38,7 +37,7 @@ const createUser = async (req, res) => {
     }
 }
 
-const getAllUsers = async (req, res) => {
+export const getAllUsersController = async (req, res) => {
     try {
         const db = await Database.open('./exercise-tracker.db')
         const sql = 'SELECT id, username FROM users'
@@ -52,12 +51,3 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ error: 'Database error. Could not get all users.' })
     }
 }
-
-const router = Router()
-
-router
-    .route('/users')
-    .get(getAllUsers)
-    .post(createUser)
-
-export default router

@@ -3,9 +3,7 @@ import cors from 'cors'
 import bp from 'body-parser'
 import { fileURLToPath } from 'url'
 import morgan from 'morgan'
-import usersRouter from './api/users-router.js'
-import exercisesRouter from './api/exercises-router.js'
-import logsRouter from './api/logs-router.js'
+import routes from './api/routes.js'
 
 // create express app
 const app = express()
@@ -22,7 +20,7 @@ app.get('/', (req, res) => {
 })
 
 // api routes
-app.use('/api', [usersRouter, exercisesRouter, logsRouter])
+app.use('/api', routes)
 
 // if testing use a dynamic port because of how jest runs tests
 const PORT = process.env.NODE_ENV === 'test' ? 0 : 3000

@@ -25,16 +25,20 @@ const createExercise = async (req, res) => {
     }
 
     let { description, duration, date } = req.body
+    // check date
     if (!date) date = new Date().toISOString().slice(0, 10)
 
+    // check desc
     if (!description || typeof description !== 'string') {
         return res.status(400).json({ error: 'Description is required. Description must be a string.' })
     }
 
+    // cehck duration
     if (!duration || typeof +duration !== 'number' || +duration <= 0) {
         return res.status(400).json({ error: 'Duration is required. Duration must be grater than 0.' })
     }
 
+    // check date
     if (!isValidDate(date)) {
         return res.status(400).json({ error: 'Invalid date. Expected format: YYYY-MM-DD' })
     }

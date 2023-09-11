@@ -1,12 +1,5 @@
 import { Database } from 'sqlite-async'
-
-const isValidDate = (date) => {
-    const pattern = /^\d{4}-\d{2}-\d{2}$/
-    if (!pattern.test(date)) return false
-
-    const parsedDate = new Date(date)
-    return parsedDate.toISOString().slice(0, 10) === date
-}
+import { isValidDate } from '../../utils/utils.js'
 
 export const createExerciseController = async (req, res) => {
     const userId = req.params.id
@@ -24,21 +17,28 @@ export const createExerciseController = async (req, res) => {
     }
 
     let { description, duration, date } = req.body
-    // check date
-    if (!date) date = new Date().toISOString().slice(0, 10)
 
     // check desc
     if (!description || typeof description !== 'string') {
         return res.status(400).json({ error: 'Description is required. Description must be a string.' })
     }
 
-    // cehck duration
-    if (!duration || typeof +duration !== 'number' || +duration <= 0) {
-        return res.status(400).json({ error: 'Duration is required. Duration must be grater than 0.' })
+    // check duration
+    if (duration === undefined || duration === '') {
+        return res.status(400).json({ error: 'Duration is required.' })
+    }
+    if (typeof duration !== 'number') {
+        return res.status(400).json({ error: 'Duration must be a number.' })
+    }
+    if (duration <= 0) {
+        return res.status(400).json({ error: 'Duration must be grater than 0.' })
     }
 
     // check date
-    if (!isValidDate(date)) {
+    if (!date) {
+        date = new Date().toISOString().slice(0, 10)
+    }
+    if (date && !isValidDate(date)) {
         return res.status(400).json({ error: 'Invalid date. Expected format: YYYY-MM-DD' })
     }
 

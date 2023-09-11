@@ -48,9 +48,9 @@ export const createExerciseController = async (req, res) => {
         const result = await db.run(sql, userId, description, duration, date)
         await db.close()
 
-        res.json({ userId, id: result.lastID, description, duration, date })
+        return res.json({ userId, id: result.lastID, description, duration, date })
     } catch (err) {
         console.error(err)
-        res.status(500).json({ error: 'Database error' })
+        return res.status(500).json({ error: 'Database error' })
     }
 }

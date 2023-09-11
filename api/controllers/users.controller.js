@@ -30,10 +30,10 @@ export const createUserController = async (req, res) => {
         const result = await db.run(sql, username)
         await db.close()
 
-        res.json({ id: result.lastID, username })
+        return res.json({ id: result.lastID, username })
     } catch (err) {
         if (err.errno === 19) return res.status(409).json({ error: 'Username must be unique.' })
-        res.status(500).json({ error: 'Database error. Could not create new user.' })
+        return res.status(500).json({ error: 'Database error. Could not create new user.' })
     }
 }
 
@@ -46,8 +46,8 @@ export const getAllUsersController = async (req, res) => {
         
         if (!users.length) return res.status(404).json({ error: 'No users found.' })
 
-        res.json(users)
+        return res.json(users)
     } catch (err) {
-        res.status(500).json({ error: 'Database error. Could not get all users.' })
+        return res.status(500).json({ error: 'Database error. Could not get all users.' })
     }
 }

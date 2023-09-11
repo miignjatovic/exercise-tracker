@@ -42,8 +42,8 @@ export const getUserExerciseLogsController = async (req, res) => {
             count: totalExercises
         }
 
-        res.json(response)
+        return res.json(response)
     } catch (err) {
-        res.status(500).json({ error: 'Database error while getting logs.' })
+        return res.status(500).json({ error: 'Database error while getting logs.' })
     }
 }

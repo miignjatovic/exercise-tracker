@@ -1,4 +1,3 @@
-import { Database } from 'sqlite-async'
 import { isValidDate } from '../../utils/utils.js'
 
 export const getUserExerciseLogsController = async (req, res) => {
@@ -16,7 +15,7 @@ export const getUserExerciseLogsController = async (req, res) => {
             dateFilter += ' AND date >= ?'
             queryParams.push(from)
         } else {
-            fromToErrors.push('"from"')
+            fromToErrors.push('from')
         }
     }
     if (to) {
@@ -24,7 +23,7 @@ export const getUserExerciseLogsController = async (req, res) => {
             dateFilter += ' AND date <= ?'
             queryParams.push(to)
         } else {
-            fromToErrors.push('"to"')
+            fromToErrors.push('to')
         }
     }
     if (fromToErrors.length) {
@@ -41,23 +40,18 @@ export const getUserExerciseLogsController = async (req, res) => {
     }
 
     try {
-        const db = await Database.open('./exercise-tracker.db')
-
         // get user information from db
-        const user = await db.get('SELECT id, username FROM users WHERE id = ?', userId)
+        const user = await req.db.get('SELECT id, username FROM users WHERE id = ?', userId)
         if (!user) {
-            await db.close()
             return res.status(404).json({ error: 'User not found.' })
         }
 
         // get all exercise logs with filters. LIMIT set to -1 if no limit is passed witch returns the entire list of exercises
         // order by date DESC to get the latest exercises
-        const logs = await db.all(`SELECT id, description, duration, date FROM exercises WHERE userId = ?${dateFilter} ORDER BY date DESC LIMIT ?`, [...queryParams, limit || -1])
+        const logs = await req.db.all(`SELECT id, description, duration, date FROM exercises WHERE userId = ?${dateFilter} ORDER BY date DESC LIMIT ?`, [...queryParams, limit || -1])
 
         // count total exercises and add from and to filter if querry params are present
-        const { totalExercises } = await db.get(`SELECT COUNT(id) as totalExercises FROM exercises WHERE userId = ?${dateFilter}`, queryParams);
-
-        await db.close()
+        const { totalExercises } = await req.db.get(`SELECT COUNT(id) as totalExercises FROM exercises WHERE userId = ?${dateFilter}`, queryParams);
 
         // construct the response
         const response = {

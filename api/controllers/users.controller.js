@@ -25,10 +25,8 @@ export const createUserController = async (req, res) => {
     }
 
     try {
-        const db = await Database.open('./exercise-tracker.db')
         const sql = 'INSERT INTO users (username) VALUES (?)'
-        const result = await db.run(sql, username)
-        await db.close()
+        const result = await req.db.run(sql, username)
 
         return res.json({ id: result.lastID, username })
     } catch (err) {
@@ -39,10 +37,8 @@ export const createUserController = async (req, res) => {
 
 export const getAllUsersController = async (req, res) => {
     try {
-        const db = await Database.open('./exercise-tracker.db')
         const sql = 'SELECT id, username FROM users'
-        const users = await db.all(sql)
-        await db.close()
+        const users = await req.db.all(sql)
         
         if (!users.length) return res.status(404).json({ error: 'No users found.' })
 

@@ -1,4 +1,3 @@
-import { Database } from 'sqlite-async'
 import { isValidDate } from '../../utils/utils.js'
 
 export const createExerciseController = async (req, res) => {
@@ -6,10 +5,8 @@ export const createExerciseController = async (req, res) => {
 
     // check if the user exists
     try {
-        const db = await Database.open('./exercise-tracker.db')
-        const user = await db.get('SELECT id, username FROM users WHERE id = ?', userId)
+        const user = await req.db.get('SELECT id, username FROM users WHERE id = ?', userId)
         if (!user) {
-            await db.close()
             return res.status(404).json({ error: 'User not found.' })
         }
     } catch (err) {
@@ -43,14 +40,11 @@ export const createExerciseController = async (req, res) => {
     }
 
     try {
-        const db = await Database.open('./exercise-tracker.db')
         const sql = 'INSERT INTO exercises (userId, description, duration, date) VALUES (?,?,?,?)'
-        const result = await db.run(sql, userId, description, duration, date)
-        await db.close()
+        const result = await req.db.run(sql, userId, description, duration, date)
 
         return res.json({ userId, id: result.lastID, description, duration, date })
     } catch (err) {
-        console.error(err)
         return res.status(500).json({ error: 'Database error' })
     }
 }

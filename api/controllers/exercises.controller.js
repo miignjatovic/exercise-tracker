@@ -24,7 +24,7 @@ export const createExerciseController = async (req, res) => {
     if (duration === undefined || duration === '') {
         return res.status(400).json({ error: 'Duration is required.' })
     }
-    if (typeof duration !== 'number') {
+    if (typeof +duration !== 'number') {
         return res.status(400).json({ error: 'Duration must be a number.' })
     }
     if (duration <= 0) {

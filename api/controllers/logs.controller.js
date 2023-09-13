@@ -47,8 +47,8 @@ export const getUserExerciseLogsController = async (req, res) => {
         }
 
         // get all exercise logs with filters. LIMIT set to -1 if no limit is passed witch returns the entire list of exercises
-        // order by date DESC to get the latest exercises
-        const logs = await req.db.all(`SELECT id, description, duration, date FROM exercises WHERE userId = ?${dateFilter} ORDER BY date DESC LIMIT ?`, [...queryParams, limit || -1])
+        // order by date ASC to get the latest exercises
+        const logs = await req.db.all(`SELECT id, description, duration, date FROM exercises WHERE userId = ?${dateFilter} ORDER BY date ASC LIMIT ?`, [...queryParams, limit || -1])
 
         // count total exercises and add from and to filter if querry params are present
         const { totalExercises } = await req.db.get(`SELECT COUNT(id) as totalExercises FROM exercises WHERE userId = ?${dateFilter}`, queryParams);

@@ -16,7 +16,7 @@ export const createUserController = async (req, res) => {
     // alphanumeric check
     const alphanumeric = /^[a-z0-9]+$/i
     if (!alphanumeric.test(username)) {
-        return res.status(400).json({ error: 'Username can only contain letters and numbers.' })
+        return res.status(400).json({ error: 'Username can only contain letters and numbers. No white spaces or special characters.' })
     }
 
     // no leading or trailing spaces
